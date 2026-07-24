@@ -135,11 +135,8 @@ function Importacao() {
         totalItens += toInsert.length + toUpdate.length;
       }
 
-      const { data: user } = await supabase.auth.getUser();
       await supabase.from("importacoes").insert({
         arquivo: file.name,
-        usuario_id: user.user?.id,
-        usuario_nome: user.user?.email,
         quantidade_registros: totalItens,
       });
 
