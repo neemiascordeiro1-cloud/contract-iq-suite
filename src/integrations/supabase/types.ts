@@ -14,16 +14,205 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contratos: {
+        Row: {
+          created_at: string
+          data_fim: string | null
+          data_inicio: string | null
+          fornecedor: string
+          id: string
+          numero_contrato: string
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          fornecedor: string
+          id?: string
+          numero_contrato: string
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          fornecedor?: string
+          id?: string
+          numero_contrato?: string
+          status?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      historico_precos: {
+        Row: {
+          codigo: string
+          data_referencia: string
+          id: string
+          item_id: string | null
+          preco: number
+        }
+        Insert: {
+          codigo: string
+          data_referencia?: string
+          id?: string
+          item_id?: string | null
+          preco: number
+        }
+        Update: {
+          codigo?: string
+          data_referencia?: string
+          id?: string
+          item_id?: string | null
+          preco?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "historico_precos_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "itens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      importacoes: {
+        Row: {
+          arquivo: string
+          data_importacao: string
+          id: string
+          quantidade_registros: number
+          status: string | null
+          usuario_id: string | null
+          usuario_nome: string | null
+        }
+        Insert: {
+          arquivo: string
+          data_importacao?: string
+          id?: string
+          quantidade_registros?: number
+          status?: string | null
+          usuario_id?: string | null
+          usuario_nome?: string | null
+        }
+        Update: {
+          arquivo?: string
+          data_importacao?: string
+          id?: string
+          quantidade_registros?: number
+          status?: string | null
+          usuario_id?: string | null
+          usuario_nome?: string | null
+        }
+        Relationships: []
+      }
+      itens: {
+        Row: {
+          codigo: string
+          contrato_id: string
+          created_at: string
+          data_atualizacao: string
+          descricao: string | null
+          id: string
+          preco_anterior: number | null
+          preco_atual: number
+          unidade: string | null
+        }
+        Insert: {
+          codigo: string
+          contrato_id: string
+          created_at?: string
+          data_atualizacao?: string
+          descricao?: string | null
+          id?: string
+          preco_anterior?: number | null
+          preco_atual?: number
+          unidade?: string | null
+        }
+        Update: {
+          codigo?: string
+          contrato_id?: string
+          created_at?: string
+          data_atualizacao?: string
+          descricao?: string | null
+          id?: string
+          preco_anterior?: number | null
+          preco_atual?: number
+          unidade?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itens_contrato_id_fkey"
+            columns: ["contrato_id"]
+            isOneToOne: false
+            referencedRelation: "contratos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          nome: string | null
+          perfil: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id: string
+          nome?: string | null
+          perfil?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string | null
+          perfil?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +339,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
