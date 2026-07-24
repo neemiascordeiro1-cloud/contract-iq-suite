@@ -9,38 +9,207 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated/relatorios'
+import { Route as AuthenticatedReajustesRouteImport } from './routes/_authenticated/reajustes'
+import { Route as AuthenticatedItensRouteImport } from './routes/_authenticated/itens'
+import { Route as AuthenticatedImportacaoRouteImport } from './routes/_authenticated/importacao'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedContratosRouteImport } from './routes/_authenticated/contratos'
+import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
+import { Route as AuthenticatedComparadorRouteImport } from './routes/_authenticated/comparador'
+import { Route as AuthenticatedCalculadoraRouteImport } from './routes/_authenticated/calculadora'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedReajustesRoute = AuthenticatedReajustesRouteImport.update({
+  id: '/reajustes',
+  path: '/reajustes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedItensRoute = AuthenticatedItensRouteImport.update({
+  id: '/itens',
+  path: '/itens',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedImportacaoRoute = AuthenticatedImportacaoRouteImport.update({
+  id: '/importacao',
+  path: '/importacao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedContratosRoute = AuthenticatedContratosRouteImport.update({
+  id: '/contratos',
+  path: '/contratos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedConfiguracoesRoute =
+  AuthenticatedConfiguracoesRouteImport.update({
+    id: '/configuracoes',
+    path: '/configuracoes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedComparadorRoute = AuthenticatedComparadorRouteImport.update({
+  id: '/comparador',
+  path: '/comparador',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCalculadoraRoute =
+  AuthenticatedCalculadoraRouteImport.update({
+    id: '/calculadora',
+    path: '/calculadora',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/calculadora': typeof AuthenticatedCalculadoraRoute
+  '/comparador': typeof AuthenticatedComparadorRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/contratos': typeof AuthenticatedContratosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/importacao': typeof AuthenticatedImportacaoRoute
+  '/itens': typeof AuthenticatedItensRoute
+  '/reajustes': typeof AuthenticatedReajustesRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/calculadora': typeof AuthenticatedCalculadoraRoute
+  '/comparador': typeof AuthenticatedComparadorRoute
+  '/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/contratos': typeof AuthenticatedContratosRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/importacao': typeof AuthenticatedImportacaoRoute
+  '/itens': typeof AuthenticatedItensRoute
+  '/reajustes': typeof AuthenticatedReajustesRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/calculadora': typeof AuthenticatedCalculadoraRoute
+  '/_authenticated/comparador': typeof AuthenticatedComparadorRoute
+  '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
+  '/_authenticated/contratos': typeof AuthenticatedContratosRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/importacao': typeof AuthenticatedImportacaoRoute
+  '/_authenticated/itens': typeof AuthenticatedItensRoute
+  '/_authenticated/reajustes': typeof AuthenticatedReajustesRoute
+  '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/calculadora'
+    | '/comparador'
+    | '/configuracoes'
+    | '/contratos'
+    | '/dashboard'
+    | '/importacao'
+    | '/itens'
+    | '/reajustes'
+    | '/relatorios'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/calculadora'
+    | '/comparador'
+    | '/configuracoes'
+    | '/contratos'
+    | '/dashboard'
+    | '/importacao'
+    | '/itens'
+    | '/reajustes'
+    | '/relatorios'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/calculadora'
+    | '/_authenticated/comparador'
+    | '/_authenticated/configuracoes'
+    | '/_authenticated/contratos'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/importacao'
+    | '/_authenticated/itens'
+    | '/_authenticated/reajustes'
+    | '/_authenticated/relatorios'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +217,105 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/relatorios': {
+      id: '/_authenticated/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reajustes': {
+      id: '/_authenticated/reajustes'
+      path: '/reajustes'
+      fullPath: '/reajustes'
+      preLoaderRoute: typeof AuthenticatedReajustesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/itens': {
+      id: '/_authenticated/itens'
+      path: '/itens'
+      fullPath: '/itens'
+      preLoaderRoute: typeof AuthenticatedItensRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/importacao': {
+      id: '/_authenticated/importacao'
+      path: '/importacao'
+      fullPath: '/importacao'
+      preLoaderRoute: typeof AuthenticatedImportacaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/contratos': {
+      id: '/_authenticated/contratos'
+      path: '/contratos'
+      fullPath: '/contratos'
+      preLoaderRoute: typeof AuthenticatedContratosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/configuracoes': {
+      id: '/_authenticated/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof AuthenticatedConfiguracoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/comparador': {
+      id: '/_authenticated/comparador'
+      path: '/comparador'
+      fullPath: '/comparador'
+      preLoaderRoute: typeof AuthenticatedComparadorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/calculadora': {
+      id: '/_authenticated/calculadora'
+      path: '/calculadora'
+      fullPath: '/calculadora'
+      preLoaderRoute: typeof AuthenticatedCalculadoraRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedCalculadoraRoute: typeof AuthenticatedCalculadoraRoute
+  AuthenticatedComparadorRoute: typeof AuthenticatedComparadorRoute
+  AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
+  AuthenticatedContratosRoute: typeof AuthenticatedContratosRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedImportacaoRoute: typeof AuthenticatedImportacaoRoute
+  AuthenticatedItensRoute: typeof AuthenticatedItensRoute
+  AuthenticatedReajustesRoute: typeof AuthenticatedReajustesRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedCalculadoraRoute: AuthenticatedCalculadoraRoute,
+  AuthenticatedComparadorRoute: AuthenticatedComparadorRoute,
+  AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
+  AuthenticatedContratosRoute: AuthenticatedContratosRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedImportacaoRoute: AuthenticatedImportacaoRoute,
+  AuthenticatedItensRoute: AuthenticatedItensRoute,
+  AuthenticatedReajustesRoute: AuthenticatedReajustesRoute,
+  AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
