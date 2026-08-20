@@ -17,11 +17,13 @@ import { Route as AuthenticatedReajustesRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMultiContratoRouteImport } from './routes/_authenticated/multi-contrato'
 import { Route as AuthenticatedItensRouteImport } from './routes/_authenticated/itens'
 import { Route as AuthenticatedImportacaoRouteImport } from './routes/_authenticated/importacao'
+import { Route as AuthenticatedFornecedorRouteImport } from './routes/_authenticated/fornecedor'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedContratosRouteImport } from './routes/_authenticated/contratos'
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedComparadorRouteImport } from './routes/_authenticated/comparador'
 import { Route as AuthenticatedCalculadoraRouteImport } from './routes/_authenticated/calculadora'
+import { Route as AuthenticatedAnalisadorRouteImport } from './routes/_authenticated/analisador'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -63,6 +65,11 @@ const AuthenticatedImportacaoRoute = AuthenticatedImportacaoRouteImport.update({
   path: '/importacao',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFornecedorRoute = AuthenticatedFornecedorRouteImport.update({
+  id: '/fornecedor',
+  path: '/fornecedor',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -90,15 +97,22 @@ const AuthenticatedCalculadoraRoute =
     path: '/calculadora',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnalisadorRoute = AuthenticatedAnalisadorRouteImport.update({
+  id: '/analisador',
+  path: '/analisador',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/analisador': typeof AuthenticatedAnalisadorRoute
   '/calculadora': typeof AuthenticatedCalculadoraRoute
   '/comparador': typeof AuthenticatedComparadorRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/contratos': typeof AuthenticatedContratosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/fornecedor': typeof AuthenticatedFornecedorRoute
   '/importacao': typeof AuthenticatedImportacaoRoute
   '/itens': typeof AuthenticatedItensRoute
   '/multi-contrato': typeof AuthenticatedMultiContratoRoute
@@ -108,11 +122,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/analisador': typeof AuthenticatedAnalisadorRoute
   '/calculadora': typeof AuthenticatedCalculadoraRoute
   '/comparador': typeof AuthenticatedComparadorRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/contratos': typeof AuthenticatedContratosRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/fornecedor': typeof AuthenticatedFornecedorRoute
   '/importacao': typeof AuthenticatedImportacaoRoute
   '/itens': typeof AuthenticatedItensRoute
   '/multi-contrato': typeof AuthenticatedMultiContratoRoute
@@ -124,11 +140,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/analisador': typeof AuthenticatedAnalisadorRoute
   '/_authenticated/calculadora': typeof AuthenticatedCalculadoraRoute
   '/_authenticated/comparador': typeof AuthenticatedComparadorRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
   '/_authenticated/contratos': typeof AuthenticatedContratosRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/fornecedor': typeof AuthenticatedFornecedorRoute
   '/_authenticated/importacao': typeof AuthenticatedImportacaoRoute
   '/_authenticated/itens': typeof AuthenticatedItensRoute
   '/_authenticated/multi-contrato': typeof AuthenticatedMultiContratoRoute
@@ -140,11 +158,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/analisador'
     | '/calculadora'
     | '/comparador'
     | '/configuracoes'
     | '/contratos'
     | '/dashboard'
+    | '/fornecedor'
     | '/importacao'
     | '/itens'
     | '/multi-contrato'
@@ -154,11 +174,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/analisador'
     | '/calculadora'
     | '/comparador'
     | '/configuracoes'
     | '/contratos'
     | '/dashboard'
+    | '/fornecedor'
     | '/importacao'
     | '/itens'
     | '/multi-contrato'
@@ -169,11 +191,13 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/analisador'
     | '/_authenticated/calculadora'
     | '/_authenticated/comparador'
     | '/_authenticated/configuracoes'
     | '/_authenticated/contratos'
     | '/_authenticated/dashboard'
+    | '/_authenticated/fornecedor'
     | '/_authenticated/importacao'
     | '/_authenticated/itens'
     | '/_authenticated/multi-contrato'
@@ -245,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedImportacaoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/fornecedor': {
+      id: '/_authenticated/fornecedor'
+      path: '/fornecedor'
+      fullPath: '/fornecedor'
+      preLoaderRoute: typeof AuthenticatedFornecedorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -280,15 +311,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCalculadoraRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analisador': {
+      id: '/_authenticated/analisador'
+      path: '/analisador'
+      fullPath: '/analisador'
+      preLoaderRoute: typeof AuthenticatedAnalisadorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAnalisadorRoute: typeof AuthenticatedAnalisadorRoute
   AuthenticatedCalculadoraRoute: typeof AuthenticatedCalculadoraRoute
   AuthenticatedComparadorRoute: typeof AuthenticatedComparadorRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
   AuthenticatedContratosRoute: typeof AuthenticatedContratosRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFornecedorRoute: typeof AuthenticatedFornecedorRoute
   AuthenticatedImportacaoRoute: typeof AuthenticatedImportacaoRoute
   AuthenticatedItensRoute: typeof AuthenticatedItensRoute
   AuthenticatedMultiContratoRoute: typeof AuthenticatedMultiContratoRoute
@@ -297,11 +337,13 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAnalisadorRoute: AuthenticatedAnalisadorRoute,
   AuthenticatedCalculadoraRoute: AuthenticatedCalculadoraRoute,
   AuthenticatedComparadorRoute: AuthenticatedComparadorRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
   AuthenticatedContratosRoute: AuthenticatedContratosRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFornecedorRoute: AuthenticatedFornecedorRoute,
   AuthenticatedImportacaoRoute: AuthenticatedImportacaoRoute,
   AuthenticatedItensRoute: AuthenticatedItensRoute,
   AuthenticatedMultiContratoRoute: AuthenticatedMultiContratoRoute,
