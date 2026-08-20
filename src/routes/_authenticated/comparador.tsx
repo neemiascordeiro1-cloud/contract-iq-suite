@@ -1,18 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { brl4, num, pct } from "@/lib/format";
 import { Search } from "lucide-react";
 
-const searchSchema = z.object({ codigo: fallback(z.string(), "").default("") });
-
 export const Route = createFileRoute("/_authenticated/comparador")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: (search: Record<string, unknown>): { codigo: string } => ({
+    codigo: typeof search.codigo === "string" ? search.codigo : "",
+  }),
   head: () => ({
     meta: [
       { title: "Comparativo por Item — Contract Insight" },
