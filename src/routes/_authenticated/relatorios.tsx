@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_authenticated/relatorios")({
   component: Relatorios,
 });
 
-type Tipo = "contratos" | "itens" | "reajustes" | "fornecedores" | "economia";
+type Tipo = "contratos" | "itens" | "reajustes" | "fornecedores" | "economia" | "totvs_itens_contrato";
 
 function Relatorios() {
   const [tipo, setTipo] = useState<Tipo>("contratos");
@@ -54,6 +54,32 @@ function Relatorios() {
       for (const i of (itens as any[]).filter((x) => x.preco_anterior > 0 && x.preco_atual < x.preco_anterior)) {
         const c = (contratos as any[]).find((x) => x.id === i.contrato_id);
         list.push({ Código: i.codigo, Fornecedor: c?.fornecedor, Antigo: Number(i.preco_anterior), Novo: Number(i.preco_atual), Economia: Number(i.preco_anterior) - Number(i.preco_atual) });
+      }
+    } else if (tipo === "totvs_itens_contrato") {
+      const contratosMap = new Map((contratos as any[]).map((c) => [c.id, c]));
+      const sortedItens = [...(itens as any[])].sort((a, b) => {
+        const ca = contratosMap.get(a.contrato_id)?.numero_contrato ?? "";
+        const cb = contratosMap.get(b.contrato_id)?.numero_contrato ?? "";
+        return ca.localeCompare(cb) || (a.codigo || "").localeCompare(b.codigo || "");
+      });
+      for (const i of sortedItens) {
+        const c = contratosMap.get(i.contrato_id);
+        const atual = Number(i.preco_atual) || 0;
+        const ant = Number(i.preco_anterior) || 0;
+        const v = ant > 0 ? ((atual - ant) / ant) * 100 : 0;
+        const dt = i.data_atualizacao ? new Date(i.data_atualizacao).toLocaleDateString("pt-BR") : "—";
+        list.push({
+          "Contrato TOTVS": c?.numero_contrato ?? "—",
+          "Fornecedor": c?.fornecedor ?? "—",
+          "Status": c?.status ?? "Ativo",
+          "Código Item": i.codigo,
+          "Descrição": i.descricao ?? "—",
+          "Unidade": i.unidade ?? "UN",
+          "Preço Anterior": ant,
+          "Preço Atual": atual,
+          "Var %": v,
+          "Data Atualização": dt,
+        });
       }
     }
     return list;
@@ -97,6 +123,7 @@ function Relatorios() {
             <SelectContent>
               <SelectItem value="contratos">Contratos</SelectItem>
               <SelectItem value="itens">Itens</SelectItem>
+              <SelectItem value="totvs_itens_contrato">Relatório TOTVS — Itens por Contrato</SelectItem>
               <SelectItem value="reajustes">Reajustes</SelectItem>
               <SelectItem value="fornecedores">Fornecedores</SelectItem>
               <SelectItem value="economia">Economia Potencial</SelectItem>

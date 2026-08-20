@@ -2,6 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, FileText, Package, TrendingUp, GitCompareArrows,
   Calculator, BarChart3, Upload, Settings, Sparkles, LogOut,
+  Layers, FileSearch,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -14,6 +15,8 @@ const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Contratos", url: "/contratos", icon: FileText },
   { title: "Itens", url: "/itens", icon: Package },
+  { title: "Itens em Mais de Um Contrato", url: "/multi-contrato", icon: Layers },
+  { title: "Analisador de Contratos", url: "/analisador", icon: FileSearch },
   { title: "Reajustes", url: "/reajustes", icon: TrendingUp },
   { title: "Comparador", url: "/comparador", icon: GitCompareArrows },
   { title: "Calculadora", url: "/calculadora", icon: Calculator },

@@ -4,7 +4,7 @@ import * as XLSX from "xlsx";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Upload, CheckCircle2, FileSpreadsheet } from "lucide-react";
+import { Upload, CheckCircle2, FileSpreadsheet, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { num } from "@/lib/format";
 
@@ -156,6 +156,19 @@ function Importacao() {
     }
   };
 
+  const removerImportacao = async (id: string, nomeArquivo?: string) => {
+    if (!window.confirm(`Deseja realmente remover o registro de importação "${nomeArquivo || id}"?`)) return;
+    try {
+      const { error } = await supabase.from("importacoes").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Registro de importação removido com sucesso");
+      qc.invalidateQueries({ queryKey: ["importacoes"] });
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message ?? "Erro ao remover importação");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div>
@@ -197,19 +210,31 @@ function Importacao() {
                 <th className="text-right p-3">Registros</th>
                 <th className="text-right p-3">Data</th>
                 <th className="text-right p-3">Status</th>
+                <th className="text-center p-3 w-20">Ações</th>
               </tr>
             </thead>
             <tbody>
               {(hist as any[]).map((h) => (
                 <tr key={h.id} className="border-t border-border/40">
-                  <td className="p-3">{h.arquivo}</td>
+                  <td className="p-3 font-medium">{h.arquivo}</td>
                   <td className="p-3 text-muted-foreground">{h.usuario_nome ?? "—"}</td>
                   <td className="p-3 text-right font-medium">{num(h.quantidade_registros)}</td>
                   <td className="p-3 text-right text-muted-foreground">{new Date(h.data_importacao).toLocaleString("pt-BR")}</td>
                   <td className="p-3 text-right"><span className="inline-flex items-center gap-1 text-emerald-400"><CheckCircle2 className="h-3.5 w-3.5" />{h.status}</span></td>
+                  <td className="p-3 text-center">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                      title="Excluir importação"
+                      onClick={() => removerImportacao(h.id, h.arquivo)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </td>
                 </tr>
               ))}
-              {hist.length === 0 && <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Nenhuma importação ainda.</td></tr>}
+              {hist.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">Nenhuma importação ainda.</td></tr>}
             </tbody>
           </table>
         </div>
