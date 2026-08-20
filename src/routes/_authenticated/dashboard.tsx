@@ -52,33 +52,7 @@ function Dashboard() {
   const { data: itens = [] } = useQuery({
     queryKey: ["itens-all"],
     queryFn: async () => (await supabase.from("itens").select("*")).data ?? [],
-  });
-if (itens.length === 0) {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Dashboard Executivo
-        </h1>
 
-        <p className="text-muted-foreground mt-1">
-          Spend Analysis, Performance de Fornecedores e Resultados de Negociação.
-        </p>
-      </div>
-
-      <div className="glass-card rounded-xl p-10 text-center">
-        <h2 className="text-xl font-semibold">
-          Nenhuma planilha importada
-        </h2>
-
-        <p className="text-muted-foreground mt-2">
-          Importe uma planilha para visualizar indicadores, gráficos e análises.
-        </p>
-      </div>
-    </div>
-  );
-}
-  // Filtros Globais
   const [fFornecedor, setFFornecedor] = useState(ALL);
   const [fContrato, setFContrato] = useState(ALL);
   const [fCodigo, setFCodigo] = useState(ALL);
@@ -328,8 +302,22 @@ if (itens.length === 0) {
       navigate({ to: "/fornecedor", search: { nome: nomeFornecedor } });
     }
   };
-
+if (itens.length === 0) {
   return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Dashboard Executivo
+        </h1>
+
+        <p className="text-muted-foreground mt-1">
+          Nenhuma planilha importada.
+        </p>
+      </div>
+    </div>
+  );
+}
+ return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
