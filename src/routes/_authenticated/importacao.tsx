@@ -157,17 +157,53 @@ function Importacao() {
   };
 
   const removerImportacao = async (id: string, nomeArquivo?: string) => {
-    if (!window.confirm(`Deseja realmente remover o registro de importação "${nomeArquivo || id}"?`)) return;
-    try {
-      const { error } = await supabase.from("importacoes").delete().eq("id", id);
-      if (error) throw error;
-      toast.success("Registro de importação removido com sucesso");
-      qc.invalidateQueries({ queryKey: ["importacoes"] });
-    } catch (err: any) {
-      console.error(err);
-      toast.error(err.message ?? "Erro ao remover importação");
-    }
-  };
+  if (
+    !window.confirm(
+      `Deseja realmente remover a importação "${nomeArquivo || id}" e limpar todos os dados carregados?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    const { error: erroHistorico } = await supabase
+      .from("historico_precos")
+      .delete()
+      .neq("id", "");
+
+    if (erroHistorico) throw erroHistorico;
+
+    const { error: erroItens } = await supabase
+      .from("itens")
+      .delete()
+      .neq("id", "");
+
+    if (erroItens) throw erroItens;
+
+    const { error: erroContratos } = await supabase
+      .from("contratos")
+      .delete()
+      .neq("id", "");
+
+    if (erroContratos) throw erroContratos;
+
+    const { error: erroImportacao } = await supabase
+      .from("importacoes")
+      .delete()
+      .eq("id", id);
+
+    if (erroImportacao) throw erroImportacao;
+
+    toast.success("Importação e dados removidos com sucesso");
+
+    qc.invalidateQueries();
+  } catch (err: any) {
+    console.error(err);
+    toast.error(err.message ?? "Erro ao remover dados");
+  } finally {
+    setLoading(false
 
   return (
     <div className="space-y-6">
