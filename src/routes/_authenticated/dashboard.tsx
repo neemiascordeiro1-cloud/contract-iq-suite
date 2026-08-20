@@ -5,8 +5,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { KpiCard } from "@/components/KpiCard";
 import { brl, brlCompact, num, pct } from "@/lib/format";
 import {
-  BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, CartesianGrid,
-  PieChart, Pie, Cell, LabelList,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  Tooltip,
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell,
+  LabelList,
+  Legend,
 } from "recharts";
 import {
   FileText, Users, Package, PiggyBank, DollarSign, ShoppingCart, TrendingUp, Layers,
