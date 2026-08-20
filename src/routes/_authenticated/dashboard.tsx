@@ -302,21 +302,6 @@ function Dashboard() {
       navigate({ to: "/fornecedor", search: { nome: nomeFornecedor } });
     }
   };
-if (itens.length === 0) {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">
-          Dashboard Executivo
-        </h1>
-
-        <p className="text-muted-foreground mt-1">
-          Nenhuma planilha importada.
-        </p>
-      </div>
-    </div>
-  );
-}
  return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
