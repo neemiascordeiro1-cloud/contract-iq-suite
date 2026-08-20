@@ -174,7 +174,6 @@ function Importacao() {
       .neq("id", "");
 
     if (erroHistorico) throw erroHistorico;
-
     const { error: erroItens } = await supabase
       .from("itens")
       .delete()
@@ -202,8 +201,10 @@ function Importacao() {
   } catch (err: any) {
     console.error(err);
     toast.error(err.message ?? "Erro ao remover dados");
-  } finally {
-    setLoading(false
+} finally {
+  setLoading(false);
+}
+};
 
   return (
     <div className="space-y-6">
