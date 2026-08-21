@@ -151,7 +151,7 @@ function Importacao() {
 
       toast.success(`Importação concluída · ${totalItens} item(ns) processados`);
       setProgress("");
-      qc.invalidateQueries();
+      await resetClientState(qc);
     } catch (e: any) {
       console.error(e);
       toast.error(e.message ?? "Erro na importação");
