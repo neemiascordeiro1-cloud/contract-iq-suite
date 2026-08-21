@@ -174,25 +174,8 @@ function Importacao() {
   try {
     setLoading(true);
 
-    const { error: erroHistorico } = await supabase
-      .from("historico_precos")
-      .delete()
-      .neq("id", "");
-
-    if (erroHistorico) throw erroHistorico;
-    const { error: erroItens } = await supabase
-      .from("itens")
-      .delete()
-      .neq("id", "");
-
-    if (erroItens) throw erroItens;
-
-    const { error: erroContratos } = await supabase
-      .from("contratos")
-      .delete()
-      .neq("id", "");
-
-    if (erroContratos) throw erroContratos;
+    // Exclusão da planilha = limpeza completa do dataset associado
+    await wipeDataset();
 
     const { error: erroImportacao } = await supabase
       .from("importacoes")
@@ -203,7 +186,7 @@ function Importacao() {
 
     toast.success("Importação e dados removidos com sucesso");
 
-    qc.invalidateQueries();
+    await resetClientState(qc);
   } catch (err: any) {
     console.error(err);
     toast.error(err.message ?? "Erro ao remover dados");
