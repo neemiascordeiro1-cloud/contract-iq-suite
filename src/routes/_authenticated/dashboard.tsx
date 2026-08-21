@@ -52,6 +52,7 @@ function Dashboard() {
   const { data: itens = [] } = useQuery({
     queryKey: ["itens-all"],
     queryFn: async () => (await supabase.from("itens").select("*")).data ?? [],
+  });
 
   const [fFornecedor, setFFornecedor] = useState(ALL);
   const [fContrato, setFContrato] = useState(ALL);
