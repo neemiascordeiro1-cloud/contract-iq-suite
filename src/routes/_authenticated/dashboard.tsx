@@ -298,6 +298,15 @@ function Dashboard() {
     setFornSpendTemporal(ALL);
   };
 
+  // Nova importação / exclusão de planilha: zera filtros e métricas sem precisar de F5
+  useEffect(() => {
+    const onReset = () => limpar();
+    window.addEventListener(DATASET_RESET_EVENT, onReset);
+    return () => window.removeEventListener(DATASET_RESET_EVENT, onReset);
+  }, []);
+
+
+
   const handleFornecedorClick = (nomeFornecedor?: string) => {
     if (nomeFornecedor && nomeFornecedor !== "—") {
       navigate({ to: "/fornecedor", search: { nome: nomeFornecedor } });
