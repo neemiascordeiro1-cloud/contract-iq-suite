@@ -85,6 +85,11 @@ function Importacao() {
         }
       }
 
+      // Fonte de dados única: remove todo o dataset anterior antes de gravar o novo
+      setProgress("Removendo dados da importação anterior...");
+      await wipeDataset({ incluirImportacoes: true });
+      await resetClientState(qc);
+
       let totalItens = 0;
       let contratoIdx = 0;
       for (const [numero, { fornecedor, itens }] of contratosMap.entries()) {
