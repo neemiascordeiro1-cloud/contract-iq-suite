@@ -17,6 +17,13 @@ function Itens() {
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string | null>(null);
 
+  useEffect(() => {
+    const onReset = () => { setSel(null); setBusca(""); };
+    window.addEventListener(DATASET_RESET_EVENT, onReset);
+    return () => window.removeEventListener(DATASET_RESET_EVENT, onReset);
+  }, []);
+
+
   const { data: itens = [] } = useQuery({
     queryKey: ["itens-all"],
     queryFn: async () => (await supabase.from("itens").select("*").order("codigo")).data ?? [],
