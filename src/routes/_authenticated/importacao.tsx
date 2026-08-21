@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Upload, CheckCircle2, FileSpreadsheet, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { num } from "@/lib/format";
+import { wipeDataset, resetClientState } from "@/lib/dataset";
 
 export const Route = createFileRoute("/_authenticated/importacao")({
   head: () => ({ meta: [{ title: "Importação — Contract Insight" }] }),
@@ -85,6 +86,11 @@ function Importacao() {
         }
       }
 
+      // Fonte de dados única: remove todo o dataset anterior antes de gravar o novo
+      setProgress("Removendo dados da importação anterior...");
+      await wipeDataset({ incluirImportacoes: true });
+      await resetClientState(qc);
+
       let totalItens = 0;
       let contratoIdx = 0;
       for (const [numero, { fornecedor, itens }] of contratosMap.entries()) {
@@ -145,7 +151,7 @@ function Importacao() {
 
       toast.success(`Importação concluída · ${totalItens} item(ns) processados`);
       setProgress("");
-      qc.invalidateQueries();
+      await resetClientState(qc);
     } catch (e: any) {
       console.error(e);
       toast.error(e.message ?? "Erro na importação");
@@ -168,25 +174,8 @@ function Importacao() {
   try {
     setLoading(true);
 
-    const { error: erroHistorico } = await supabase
-      .from("historico_precos")
-      .delete()
-      .neq("id", "");
-
-    if (erroHistorico) throw erroHistorico;
-    const { error: erroItens } = await supabase
-      .from("itens")
-      .delete()
-      .neq("id", "");
-
-    if (erroItens) throw erroItens;
-
-    const { error: erroContratos } = await supabase
-      .from("contratos")
-      .delete()
-      .neq("id", "");
-
-    if (erroContratos) throw erroContratos;
+    // Exclusão da planilha = limpeza completa do dataset associado
+    await wipeDataset();
 
     const { error: erroImportacao } = await supabase
       .from("importacoes")
@@ -197,7 +186,7 @@ function Importacao() {
 
     toast.success("Importação e dados removidos com sucesso");
 
-    qc.invalidateQueries();
+    await resetClientState(qc);
   } catch (err: any) {
     console.error(err);
     toast.error(err.message ?? "Erro ao remover dados");

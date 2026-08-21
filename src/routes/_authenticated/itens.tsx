@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { DATASET_RESET_EVENT } from "@/lib/dataset";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,13 @@ export const Route = createFileRoute("/_authenticated/itens")({
 function Itens() {
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string | null>(null);
+
+  useEffect(() => {
+    const onReset = () => { setSel(null); setBusca(""); };
+    window.addEventListener(DATASET_RESET_EVENT, onReset);
+    return () => window.removeEventListener(DATASET_RESET_EVENT, onReset);
+  }, []);
+
 
   const { data: itens = [] } = useQuery({
     queryKey: ["itens-all"],

@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { DATASET_RESET_EVENT } from "@/lib/dataset";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { KpiCard } from "@/components/KpiCard";
@@ -297,6 +298,15 @@ function Dashboard() {
     setGranulSpendTemporal("mensal");
     setFornSpendTemporal(ALL);
   };
+
+  // Nova importação / exclusão de planilha: zera filtros e métricas sem precisar de F5
+  useEffect(() => {
+    const onReset = () => limpar();
+    window.addEventListener(DATASET_RESET_EVENT, onReset);
+    return () => window.removeEventListener(DATASET_RESET_EVENT, onReset);
+  }, []);
+
+
 
   const handleFornecedorClick = (nomeFornecedor?: string) => {
     if (nomeFornecedor && nomeFornecedor !== "—") {
