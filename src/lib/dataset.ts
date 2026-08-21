@@ -13,10 +13,7 @@ export async function wipeDataset() {
       .not("id", "is", null);
 
     if (error) {
-      console.error(
-        `Erro ao limpar ${tabela}`,
-        error
-      );
+      console.error(`Erro ao limpar ${tabela}`, error);
       throw error;
     }
   }
@@ -39,8 +36,8 @@ export async function wipeDataset() {
     historico.data?.length ||
     importacoes.data?.length
   ) {
-    throw new Error(
-      "Dataset não foi totalmente removido."
-    );
+    throw new Error("Dataset não foi totalmente removido.");
   }
+
+  return true;
 }
