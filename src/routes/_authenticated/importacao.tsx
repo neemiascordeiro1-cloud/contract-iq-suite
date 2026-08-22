@@ -57,11 +57,11 @@ function Importacao() {
       };
       const first = rows[0];
       const kContrato = findKey(first, "Contrato", "Nr Contrato", "Numero Contrato");
-     const kFornecedor = findKey(
-  first,
-  "Nome Fornecedor",
-  "Fornecedor",
-  "Nome Abrev"
+    const kFornecedor = findKey(
+first,
+"Nome Fornecedor",
+"Fornecedor",
+"Nome Abrev"
 );
 const kCodigo = findKey(first, "Codigo", "Item");
       const kDesc = findKey(first, "Descricao", "Desc Item");
