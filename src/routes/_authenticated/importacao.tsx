@@ -8,6 +8,8 @@ import { Upload, CheckCircle2, FileSpreadsheet, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { num } from "@/lib/format";
 import { wipeDataset, resetClientState } from "@/lib/dataset";
+import { inferirTipoCompra } from "@/lib/compras";
+
 
 export const Route = createFileRoute("/_authenticated/importacao")({
   head: () => ({ meta: [{ title: "Importação — Contract Insight" }] }),
@@ -61,11 +63,20 @@ function Importacao() {
       const kUnid = findKey(first, "Unidade");
       const kPreco = findKey(first, "Preco Atual", "Valor Unit", "Valor Unitario Negociado", "Valor Unitario Inicial", "Preco");
       const kData = findKey(first, "Data Atualizacao", "Dt Emissao", "Data Pedido");
+      const kQtd = findKey(first, "Quantidade", "Qtd", "Qtde", "Quant");
+      const kTipo = findKey(first, "Tipo de Compra", "Tipo Compra", "Tipo", "Grupo", "Familia", "Categoria");
+      const kVencSist = findKey(first, "Data Vencimento Contrato Sistemico", "Vencimento Sistemico", "Data Vencimento", "Vencimento");
+      const kContratoJur = findKey(first, "Contrato Juridico", "Nr Contrato Juridico", "Numero Contrato Juridico");
 
       if (!kContrato || !kCodigo || !kPreco) throw new Error("Colunas obrigatórias não encontradas (Contrato, Código, Preço).");
 
+      const soData = (v: any) => {
+        const iso = parseDate(v);
+        return iso ? iso.slice(0, 10) : null;
+      };
+
       // Group by contract
-      const contratosMap = new Map<string, { fornecedor: string; itens: Map<string, any> }>();
+      const contratosMap = new Map<string, { fornecedor: string; vencSist: string | null; contratoJur: string | null; itens: Map<string, any> }>();
       for (const r of rows) {
         const numContrato = String(r[kContrato] ?? "").trim();
         if (!numContrato || numContrato === "0" || numContrato.toLowerCase() === "null") continue;
@@ -77,12 +88,28 @@ function Importacao() {
         const desc = String((kDesc && r[kDesc]) ?? "").trim();
         const unidade = kUnid ? String(r[kUnid] ?? "").trim() : null;
         const dataAt = kData ? parseDate(r[kData]) : null;
+        const qtdRaw = kQtd ? Number(String(r[kQtd] ?? "").toString().replace(/\./g, "").replace(",", ".")) : 0;
+        const quantidade = isFinite(qtdRaw) && qtdRaw > 0 ? qtdRaw : 0;
+        const tipoCompra = kTipo && r[kTipo] ? String(r[kTipo]).trim() : inferirTipoCompra(desc);
+        const vencSist = kVencSist ? soData(r[kVencSist]) : null;
+        const contratoJur = kContratoJur && r[kContratoJur] ? String(r[kContratoJur]).trim() : null;
 
-        if (!contratosMap.has(numContrato)) contratosMap.set(numContrato, { fornecedor, itens: new Map() });
+        if (!contratosMap.has(numContrato)) contratosMap.set(numContrato, { fornecedor, vencSist, contratoJur, itens: new Map() });
         const bucket = contratosMap.get(numContrato)!;
+        if (!bucket.vencSist && vencSist) bucket.vencSist = vencSist;
+        if (!bucket.contratoJur && contratoJur) bucket.contratoJur = contratoJur;
         const prev = bucket.itens.get(codigo);
-        if (!prev || (dataAt && (!prev.dataAt || dataAt > prev.dataAt))) {
-          bucket.itens.set(codigo, { codigo, descricao: desc, unidade, preco, dataAt });
+        if (!prev) {
+          bucket.itens.set(codigo, { codigo, descricao: desc, unidade, preco, dataAt, quantidade, tipoCompra });
+        } else {
+          prev.quantidade = Number(prev.quantidade ?? 0) + quantidade;
+          if (dataAt && (!prev.dataAt || dataAt > prev.dataAt)) {
+            prev.descricao = desc || prev.descricao;
+            prev.unidade = unidade ?? prev.unidade;
+            prev.preco = preco;
+            prev.dataAt = dataAt;
+            prev.tipoCompra = tipoCompra ?? prev.tipoCompra;
+          }
         }
       }
 
@@ -93,19 +120,24 @@ function Importacao() {
 
       let totalItens = 0;
       let contratoIdx = 0;
-      for (const [numero, { fornecedor, itens }] of contratosMap.entries()) {
+      for (const [numero, { fornecedor, vencSist, contratoJur, itens }] of contratosMap.entries()) {
         contratoIdx++;
         setProgress(`Salvando contrato ${contratoIdx}/${contratosMap.size} · ${numero}`);
 
         // Upsert contrato
         const { data: existing } = await supabase.from("contratos").select("id").eq("numero_contrato", numero).maybeSingle();
         let contratoId = existing?.id;
+        const camposContrato: any = {
+          fornecedor,
+          data_vencimento_sistemico: vencSist,
+          numero_contrato_juridico: contratoJur,
+        };
         if (!contratoId) {
-          const { data, error } = await supabase.from("contratos").insert({ numero_contrato: numero, fornecedor, status: "Ativo" }).select("id").single();
+          const { data, error } = await supabase.from("contratos").insert({ numero_contrato: numero, status: "Ativo", ...camposContrato } as any).select("id").single();
           if (error) throw error;
           contratoId = data.id;
         } else {
-          await supabase.from("contratos").update({ fornecedor, updated_at: new Date().toISOString() }).eq("id", contratoId);
+          await supabase.from("contratos").update({ ...camposContrato, updated_at: new Date().toISOString() } as any).eq("id", contratoId);
         }
 
         // Existing items to preserve preco_anterior
@@ -119,14 +151,24 @@ function Importacao() {
           const prev = existMap.get(it.codigo);
           const dataAt = it.dataAt ?? new Date().toISOString();
           if (prev) {
+            toUpdate.push({
+              id: prev.id,
+              preco_atual: it.preco,
+              preco_anterior: Number(prev.preco_atual) !== it.preco ? Number(prev.preco_atual) : undefined,
+              descricao: it.descricao,
+              unidade: it.unidade,
+              quantidade: it.quantidade,
+              tipo_compra: it.tipoCompra,
+              data_atualizacao: dataAt,
+            });
             if (Number(prev.preco_atual) !== it.preco) {
-              toUpdate.push({ id: prev.id, preco_atual: it.preco, preco_anterior: Number(prev.preco_atual), descricao: it.descricao, unidade: it.unidade, data_atualizacao: dataAt });
               histRows.push({ item_id: prev.id, codigo: it.codigo, preco: it.preco, data_referencia: dataAt });
             }
           } else {
-            toInsert.push({ contrato_id: contratoId, codigo: it.codigo, descricao: it.descricao, unidade: it.unidade, preco_atual: it.preco, data_atualizacao: dataAt });
+            toInsert.push({ contrato_id: contratoId, codigo: it.codigo, descricao: it.descricao, unidade: it.unidade, preco_atual: it.preco, quantidade: it.quantidade, tipo_compra: it.tipoCompra, data_atualizacao: dataAt });
           }
         }
+
 
         if (toInsert.length) {
           const { data: inserted, error } = await supabase.from("itens").insert(toInsert).select("id, codigo, preco_atual, data_atualizacao");

@@ -20,11 +20,17 @@ export const Route = createFileRoute("/_authenticated/multi-contrato")({
   component: MultiContrato,
 });
 
+function fmtData(v: any): string {
+  if (!v) return "—";
+  const d = new Date(`${String(v).slice(0, 10)}T00:00:00`);
+  return isNaN(+d) ? "—" : d.toLocaleDateString("pt-BR");
+}
+
 export type Combo = {
   codigo: string;
   descricao: string;
-  contratoA: string; fornecedorA: string; valorA: number;
-  contratoB: string; fornecedorB: string; valorB: number;
+  contratoA: string; fornecedorA: string; valorA: number; vencSistA: string; juridicoA: string;
+  contratoB: string; fornecedorB: string; valorB: number; vencSistB: string; juridicoB: string;
   dif: number;
 };
 
@@ -47,7 +53,14 @@ function MultiContrato() {
       const c = cById.get(i.contrato_id);
       if (!c) continue;
       const arr = byCodigo.get(i.codigo) ?? [];
-      arr.push({ ...i, numero_contrato: c.numero_contrato, fornecedor: c.fornecedor, preco: Number(i.preco_atual) || 0 });
+      arr.push({
+        ...i,
+        numero_contrato: c.numero_contrato,
+        fornecedor: c.fornecedor,
+        venc_sistemico: fmtData(c.data_vencimento_sistemico),
+        contrato_juridico: c.numero_contrato_juridico ?? "—",
+        preco: Number(i.preco_atual) || 0,
+      });
       byCodigo.set(i.codigo, arr);
     }
     const out: Combo[] = [];
@@ -63,7 +76,9 @@ function MultiContrato() {
             codigo,
             descricao: A.descricao ?? B.descricao ?? "",
             contratoA: A.numero_contrato, fornecedorA: `${A.fornecedor} · ${A.numero_contrato}`, valorA: A.preco,
+            vencSistA: A.venc_sistemico, juridicoA: A.contrato_juridico,
             contratoB: B.numero_contrato, fornecedorB: `${B.fornecedor} · ${B.numero_contrato}`, valorB: B.preco,
+            vencSistB: B.venc_sistemico, juridicoB: B.contrato_juridico,
             dif: A.preco > 0 ? ((B.preco - A.preco) / A.preco) * 100 : 0,
           });
         }
@@ -88,7 +103,9 @@ function MultiContrato() {
     const ws = XLSX.utils.json_to_sheet(filtered.map((r) => ({
       Código: r.codigo, Descrição: r.descricao,
       "Contrato A": r.contratoA, "Fornecedor A": r.fornecedorA, "Valor Unitário A": r.valorA,
+      "Venc. Contrato Sistêmico A": r.vencSistA, "Nº Contrato Jurídico A": r.juridicoA,
       "Contrato B": r.contratoB, "Fornecedor B": r.fornecedorB, "Valor Unitário B": r.valorB,
+      "Venc. Contrato Sistêmico B": r.vencSistB, "Nº Contrato Jurídico B": r.juridicoB,
       "Diferença %": Number(r.dif.toFixed(2)),
     })));
     const wb = XLSX.utils.book_new();
@@ -127,9 +144,13 @@ function MultiContrato() {
                 <th className="text-left p-3">Contrato A</th>
                 <th className="text-left p-3">Fornecedor A</th>
                 <th className="text-right p-3">Valor Unit. A</th>
+                <th className="text-left p-3">Venc. Contrato Sistêmico A</th>
+                <th className="text-left p-3">Nº Contrato Jurídico A</th>
                 <th className="text-left p-3">Contrato B</th>
                 <th className="text-left p-3">Fornecedor B</th>
                 <th className="text-right p-3">Valor Unit. B</th>
+                <th className="text-left p-3">Venc. Contrato Sistêmico B</th>
+                <th className="text-left p-3">Nº Contrato Jurídico B</th>
                 <th className="text-right p-3">Diferença %</th>
               </tr>
             </thead>
@@ -143,13 +164,17 @@ function MultiContrato() {
                   <td className="p-3">{r.contratoA}</td>
                   <td className="p-3 text-xs text-muted-foreground">{r.fornecedorA}</td>
                   <td className="p-3 text-right text-emerald-400 font-medium">{brl4(r.valorA)}</td>
+                  <td className="p-3 text-xs whitespace-nowrap">{r.vencSistA}</td>
+                  <td className="p-3 text-xs">{r.juridicoA}</td>
                   <td className="p-3">{r.contratoB}</td>
                   <td className="p-3 text-xs text-muted-foreground">{r.fornecedorB}</td>
                   <td className="p-3 text-right">{brl4(r.valorB)}</td>
+                  <td className="p-3 text-xs whitespace-nowrap">{r.vencSistB}</td>
+                  <td className="p-3 text-xs">{r.juridicoB}</td>
                   <td className={`p-3 text-right font-semibold ${r.dif > 0 ? "text-[oklch(0.62_0.20_25)]" : "text-emerald-400"}`}>{pct(r.dif)}</td>
                 </tr>
               ))}
-              {filtered.length === 0 && <tr><td colSpan={9} className="p-8 text-center text-muted-foreground">Nenhum item em mais de um contrato.</td></tr>}
+              {filtered.length === 0 && <tr><td colSpan={13} className="p-8 text-center text-muted-foreground">Nenhum item em mais de um contrato.</td></tr>}
             </tbody>
           </table>
         </div>
