@@ -384,7 +384,7 @@ setTipoPeriodo("ano");
         ]
   }
 />
-          options={[{ value: "1", label: "1º Semestre" }, { value: "2", label: "2º Semestre" }]} />
+          
       </div>
 
       {/* KPIs */}
