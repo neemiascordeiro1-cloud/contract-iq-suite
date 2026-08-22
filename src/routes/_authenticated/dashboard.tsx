@@ -83,7 +83,7 @@ function Dashboard() {
       preco_atual: Number(i.preco_atual) || 0,
       preco_anterior: Number(i.preco_anterior) || 0,
       fornecedor: c?.fornecedor ?? "—",
-      numero_contrato: c?.numero_contrato ?? "—",
+      f12: c?.numero_contrato ?? "—",
       contrato_id: i.contrato_id,
       _date: d,
       _ano: d.getFullYear(),
@@ -103,22 +103,24 @@ function Dashboard() {
   }, [itensEnr]);
 
   const filtrados = useMemo(() => itensEnr.filter((i) => {
-    if (fFornecedor !== ALL && i.fornecedor !== fFornecedor) return false;
-    if (fContrato !== ALL && i.numero_contrato !== fContrato) return false;
-    if (fCodigo !== ALL && i.codigo !== fCodigo) return false;
-    if (tipoPeriodo === "ano") {
-  if (fAno !== ALL && String(i._ano) !== fAno) return false;
-}
+  if (fFornecedor !== ALL && i.fornecedor !== fFornecedor) return false;
+  if (fContrato !== ALL && i.numero_contrato !== fContrato) return false;
+  if (fCodigo !== ALL && i.codigo !== fCodigo) return false;
 
-if (tipoPeriodo === "mes") {
-  if (fAno !== ALL && String(i._mes) !== fAno) return false;
-}
+  if (tipoPeriodo === "ano") {
+    if (fAno !== ALL && String(i._ano) !== fAno) return false;
+  }
 
-if (tipoPeriodo === "semestre") {
-  if (fAno !== ALL && String(i._semestre) !== fAno) return false;
-}
-    return true;
- }, [itensEnr, fFornecedor, fContrato, fCodigo, fAno, tipoPeriodo]);
+  if (tipoPeriodo === "mes") {
+    if (fAno !== ALL && String(i._mes) !== fAno) return false;
+  }
+
+  if (tipoPeriodo === "semestre") {
+    if (fAno !== ALL && String(i._semestre) !== fAno) return false;
+  }
+
+  return true;
+}), [itensEnr, fFornecedor, fContrato, fCodigo, fAno, tipoPeriodo]);
   // KPIs
   const kpis = useMemo(() => {
     let spend = 0, saving = 0;
