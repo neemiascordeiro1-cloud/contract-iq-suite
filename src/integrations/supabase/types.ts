@@ -19,9 +19,11 @@ export type Database = {
           created_at: string
           data_fim: string | null
           data_inicio: string | null
+          data_vencimento_sistemico: string | null
           fornecedor: string
           id: string
           numero_contrato: string
+          numero_contrato_juridico: string | null
           status: string | null
           updated_at: string
         }
@@ -29,9 +31,11 @@ export type Database = {
           created_at?: string
           data_fim?: string | null
           data_inicio?: string | null
+          data_vencimento_sistemico?: string | null
           fornecedor: string
           id?: string
           numero_contrato: string
+          numero_contrato_juridico?: string | null
           status?: string | null
           updated_at?: string
         }
@@ -39,9 +43,11 @@ export type Database = {
           created_at?: string
           data_fim?: string | null
           data_inicio?: string | null
+          data_vencimento_sistemico?: string | null
           fornecedor?: string
           id?: string
           numero_contrato?: string
+          numero_contrato_juridico?: string | null
           status?: string | null
           updated_at?: string
         }
@@ -119,6 +125,8 @@ export type Database = {
           id: string
           preco_anterior: number | null
           preco_atual: number
+          quantidade: number
+          tipo_compra: string | null
           unidade: string | null
         }
         Insert: {
@@ -130,6 +138,8 @@ export type Database = {
           id?: string
           preco_anterior?: number | null
           preco_atual?: number
+          quantidade?: number
+          tipo_compra?: string | null
           unidade?: string | null
         }
         Update: {
@@ -141,6 +151,8 @@ export type Database = {
           id?: string
           preco_anterior?: number | null
           preco_atual?: number
+          quantidade?: number
+          tipo_compra?: string | null
           unidade?: string | null
         }
         Relationships: [
