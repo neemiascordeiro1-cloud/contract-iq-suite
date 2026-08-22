@@ -21,8 +21,9 @@ export const Route = createFileRoute("/_authenticated/analise-fornecedores")({
       { name: "twitter:card", content: "summary" },
     ],
   }),
-  component: AnaliseFornecedores;
+  component: AnaliseFornecedores,
 });
+
 
 const ALL = "__all__";
 
