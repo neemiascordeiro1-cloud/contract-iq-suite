@@ -44,7 +44,7 @@ const ALL = "__all__";
 type PeriodoTipo = "mensal" | "trimestral" | "semestral" | "anual";
 
 function Dashboard() {
-  const navigate = useNavigate();
+  const navigate = useNavigate();FFL
 
   const { data: contratos = [] } = useQuery({
     queryKey: ["contratos"],
@@ -59,9 +59,8 @@ function Dashboard() {
   const [fContrato, setFContrato] = useState(ALL);
   const [fCodigo, setFCodigo] = useState(ALL);
   const [fAno, setFAno] = useState(ALL);
-  const [fMes, setFMes] = useState(ALL);
-  const [fSemestre, setFSemestre] = useState(ALL);
-
+  const [tipoPeriodo, setTipoPeriodo] = useState("ano");
+  
   // Filtros específicos dos Cards
   const [periodoSpendDist, setPeriodoSpendDist] = useState<PeriodoTipo>("semestral");
   const [periodoTopFornSpend, setPeriodoTopFornSpend] = useState<"todos" | PeriodoTipo>("todos");
