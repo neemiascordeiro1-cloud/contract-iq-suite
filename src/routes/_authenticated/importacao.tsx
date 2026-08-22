@@ -8,6 +8,8 @@ import { Upload, CheckCircle2, FileSpreadsheet, Trash2 } from "lucide-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { num } from "@/lib/format";
 import { wipeDataset, resetClientState } from "@/lib/dataset";
+import { inferirTipoCompra } from "@/lib/compras";
+
 
 export const Route = createFileRoute("/_authenticated/importacao")({
   head: () => ({ meta: [{ title: "Importação — Contract Insight" }] }),
