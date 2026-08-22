@@ -63,7 +63,6 @@ function Importacao() {
   "Fornecedor",
   "Nome Abrev"
 );
-const fornecedor = String((kFornecedor && r[kFornecedor]) ?? "—").trim();
 const kCodigo = findKey(first, "Codigo", "Item");
       const kDesc = findKey(first, "Descricao", "Desc Item");
       const kUnid = findKey(first, "Unidade");
