@@ -122,7 +122,13 @@ function Contratos() {
                   <Info label="Início" value={contrato.data_inicio ? new Date(contrato.data_inicio).toLocaleDateString("pt-BR") : "—"} />
                   <Info label="Fim" value={contrato.data_fim ? new Date(contrato.data_fim).toLocaleDateString("pt-BR") : "—"} />
                   <Info label="Códigos" value={itens.length} />
+                  <Info
+                    label="Venc. contrato sistêmico"
+                    value={contrato.data_vencimento_sistemico ? new Date(`${String(contrato.data_vencimento_sistemico).slice(0, 10)}T00:00:00`).toLocaleDateString("pt-BR") : "—"}
+                  />
+                  <Info label="Nº contrato jurídico" value={contrato.numero_contrato_juridico ?? "—"} />
                 </div>
+
                 <div className="pt-2 border-t border-border/60">
                   <div className="text-xs uppercase text-muted-foreground">Valor total (soma dos preços atuais)</div>
                   <div className="text-2xl font-bold text-[oklch(0.77_0.14_82)]">{brl(valorTotal)}</div>
