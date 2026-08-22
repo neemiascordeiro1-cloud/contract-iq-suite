@@ -44,7 +44,7 @@ const ALL = "__all__";
 type PeriodoTipo = "mensal" | "trimestral" | "semestral" | "anual";
 
 function Dashboard() {
-  const navigate = useNavigate();FFL
+  const navigate = useNavigate();
 
   const { data: contratos = [] } = useQuery({
     queryKey: ["contratos"],
@@ -106,12 +106,19 @@ function Dashboard() {
     if (fFornecedor !== ALL && i.fornecedor !== fFornecedor) return false;
     if (fContrato !== ALL && i.numero_contrato !== fContrato) return false;
     if (fCodigo !== ALL && i.codigo !== fCodigo) return false;
-    if (fAno !== ALL && String(i._ano) !== fAno) return false;
-    if (fMes !== ALL && String(i._mes) !== fMes) return false;
-    if (fSemestre !== ALL && String(i._semestre) !== fSemestre) return false;
-    return true;
-  }), [itensEnr, fFornecedor, fContrato, fCodigo, fAno, fMes, fSemestre]);
+    if (tipoPeriodo === "ano") {
+  if (fAno !== ALL && String(i._ano) !== fAno) return false;
+}
 
+if (tipoPeriodo === "mes") {
+  if (fAno !== ALL && String(i._mes) !== fAno) return false;
+}
+
+if (tipoPeriodo === "semestre") {
+  if (fAno !== ALL && String(i._semestre) !== fAno) return false;
+}
+    return true;
+ }, [itensEnr, fFornecedor, fContrato, fCodigo, fAno, tipoPeriodo]);
   // KPIs
   const kpis = useMemo(() => {
     let spend = 0, saving = 0;
@@ -290,8 +297,11 @@ function Dashboard() {
   }, [filtrados, fornSpendTemporal, granulSpendTemporal]);
 
   const limpar = () => {
-    setFFornecedor(ALL); setFContrato(ALL); setFCodigo(ALL);
-    setFAno(ALL); setFMes(ALL); setFSemestre(ALL);
+    setFFornecedor(ALL);
+setFContrato(ALL);
+setFCodigo(ALL);
+setFAno(ALL);
+setTipoPeriodo("ano");
     setPeriodoSpendDist("semestral");
     setPeriodoTopFornSpend("todos");
     setGranulSpendTemporal("mensal");
@@ -329,10 +339,51 @@ function Dashboard() {
         <FilterSelect label="Fornecedor" value={fFornecedor} onChange={setFFornecedor} options={opts.fornecedores} />
         <FilterSelect label="Contrato" value={fContrato} onChange={setFContrato} options={opts.numeros} />
         <FilterSelect label="Código" value={fCodigo} onChange={setFCodigo} options={opts.codigos} />
-        <FilterSelect label="Ano" value={fAno} onChange={setFAno} options={opts.anos.map(String)} />
-        <FilterSelect label="Mês" value={fMes} onChange={setFMes}
-          options={MESES.map((m, idx) => ({ value: String(idx + 1), label: m }))} />
-        <FilterSelect label="Semestre" value={fSemestre} onChange={setFSemestre}
+       <div>
+  <label className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+    Período
+  </label>
+
+  <Select
+    value={tipoPeriodo}
+    onValueChange={setTipoPeriodo}
+  >
+    <SelectTrigger className="mt-1 h-9 text-xs">
+      <SelectValue />
+    </SelectTrigger>
+
+    <SelectContent>
+      <SelectItem value="ano">Ano</SelectItem>
+      <SelectItem value="mes">Mês</SelectItem>
+      <SelectItem value="semestre">Semestre</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
+<FilterSelect
+  label="Valor"
+  value={fAno}
+  onChange={setFAno}
+  options={
+    tipoPeriodo === "ano"
+      ? opts.anos.map(String)
+      : tipoPeriodo === "mes"
+      ? MESES.map((m, i) => ({
+          value: String(i + 1),
+          label: m,
+        }))
+      : [
+          {
+            value: "1",
+            label: "1º Semestre",
+          },
+          {
+            value: "2",
+            label: "2º Semestre",
+          },
+        ]
+  }
+/>
           options={[{ value: "1", label: "1º Semestre" }, { value: "2", label: "2º Semestre" }]} />
       </div>
 
