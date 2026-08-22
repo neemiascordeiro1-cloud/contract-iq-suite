@@ -2,7 +2,7 @@ import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
 import {
   LayoutDashboard, FileText, Package, TrendingUp, GitCompareArrows,
   Calculator, BarChart3, Upload, Settings, Sparkles, LogOut,
-  Layers, FileSearch,
+  Layers, FileSearch, Users,
 } from "lucide-react";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -16,6 +16,7 @@ const items = [
   { title: "Contratos", url: "/contratos", icon: FileText },
   { title: "Itens", url: "/itens", icon: Package },
   { title: "Itens em Mais de Um Contrato", url: "/multi-contrato", icon: Layers },
+  { title: "Compras por Fornecedor", url: "/analise-fornecedores", icon: Users },
   { title: "Analisador de Contratos", url: "/analisador", icon: FileSearch },
   { title: "Reajustes", url: "/reajustes", icon: TrendingUp },
   { title: "Comparador", url: "/comparador", icon: GitCompareArrows },
@@ -24,6 +25,7 @@ const items = [
   { title: "Importação", url: "/importacao", icon: Upload },
   { title: "Configurações", url: "/configuracoes", icon: Settings },
 ];
+
 
 export function AppSidebar() {
   const { state } = useSidebar();

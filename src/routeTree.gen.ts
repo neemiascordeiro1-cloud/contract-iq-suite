@@ -23,6 +23,7 @@ import { Route as AuthenticatedContratosRouteImport } from './routes/_authentica
 import { Route as AuthenticatedConfiguracoesRouteImport } from './routes/_authenticated/configuracoes'
 import { Route as AuthenticatedComparadorRouteImport } from './routes/_authenticated/comparador'
 import { Route as AuthenticatedCalculadoraRouteImport } from './routes/_authenticated/calculadora'
+import { Route as AuthenticatedAnaliseFornecedoresRouteImport } from './routes/_authenticated/analise-fornecedores'
 import { Route as AuthenticatedAnalisadorRouteImport } from './routes/_authenticated/analisador'
 
 const AuthRoute = AuthRouteImport.update({
@@ -97,6 +98,12 @@ const AuthenticatedCalculadoraRoute =
     path: '/calculadora',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAnaliseFornecedoresRoute =
+  AuthenticatedAnaliseFornecedoresRouteImport.update({
+    id: '/analise-fornecedores',
+    path: '/analise-fornecedores',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAnalisadorRoute = AuthenticatedAnalisadorRouteImport.update({
   id: '/analisador',
   path: '/analisador',
@@ -107,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/analisador': typeof AuthenticatedAnalisadorRoute
+  '/analise-fornecedores': typeof AuthenticatedAnaliseFornecedoresRoute
   '/calculadora': typeof AuthenticatedCalculadoraRoute
   '/comparador': typeof AuthenticatedComparadorRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
@@ -123,6 +131,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/analisador': typeof AuthenticatedAnalisadorRoute
+  '/analise-fornecedores': typeof AuthenticatedAnaliseFornecedoresRoute
   '/calculadora': typeof AuthenticatedCalculadoraRoute
   '/comparador': typeof AuthenticatedComparadorRoute
   '/configuracoes': typeof AuthenticatedConfiguracoesRoute
@@ -141,6 +150,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/analisador': typeof AuthenticatedAnalisadorRoute
+  '/_authenticated/analise-fornecedores': typeof AuthenticatedAnaliseFornecedoresRoute
   '/_authenticated/calculadora': typeof AuthenticatedCalculadoraRoute
   '/_authenticated/comparador': typeof AuthenticatedComparadorRoute
   '/_authenticated/configuracoes': typeof AuthenticatedConfiguracoesRoute
@@ -159,6 +169,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/analisador'
+    | '/analise-fornecedores'
     | '/calculadora'
     | '/comparador'
     | '/configuracoes'
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/analisador'
+    | '/analise-fornecedores'
     | '/calculadora'
     | '/comparador'
     | '/configuracoes'
@@ -192,6 +204,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/analisador'
+    | '/_authenticated/analise-fornecedores'
     | '/_authenticated/calculadora'
     | '/_authenticated/comparador'
     | '/_authenticated/configuracoes'
@@ -311,6 +324,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedCalculadoraRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/analise-fornecedores': {
+      id: '/_authenticated/analise-fornecedores'
+      path: '/analise-fornecedores'
+      fullPath: '/analise-fornecedores'
+      preLoaderRoute: typeof AuthenticatedAnaliseFornecedoresRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/analisador': {
       id: '/_authenticated/analisador'
       path: '/analisador'
@@ -323,6 +343,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalisadorRoute: typeof AuthenticatedAnalisadorRoute
+  AuthenticatedAnaliseFornecedoresRoute: typeof AuthenticatedAnaliseFornecedoresRoute
   AuthenticatedCalculadoraRoute: typeof AuthenticatedCalculadoraRoute
   AuthenticatedComparadorRoute: typeof AuthenticatedComparadorRoute
   AuthenticatedConfiguracoesRoute: typeof AuthenticatedConfiguracoesRoute
@@ -338,6 +359,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalisadorRoute: AuthenticatedAnalisadorRoute,
+  AuthenticatedAnaliseFornecedoresRoute: AuthenticatedAnaliseFornecedoresRoute,
   AuthenticatedCalculadoraRoute: AuthenticatedCalculadoraRoute,
   AuthenticatedComparadorRoute: AuthenticatedComparadorRoute,
   AuthenticatedConfiguracoesRoute: AuthenticatedConfiguracoesRoute,
